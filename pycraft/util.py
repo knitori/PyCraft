@@ -2,25 +2,34 @@
 SECTOR_SIZE = 16
 
 
-def cube_vertices(x, y, z, n):
-    """Return the vertices of the cube at position x, y, z with size 2*n."""
+def cube_vertices(x, y, z):
+    """Return the vertices of the cube at position x, y, z.
+    x, y, z is the "lower end" of any cube.
+    the exact opposite end is: x+1, y+1, z+1
+    """
     return [
-        x - n, y + n, z - n, x - n, y + n, z + n, x +
-        n, y + n, z + n, x + n, y + n, z - n,  # top
-        x - n, y - n, z - n, x + n, y - n, z - n, x + \
-        n, y - n, z + n, x - n, y - n, z + n,  # bottom
-        x - n, y - n, z - n, x - n, y - n, z + n, x - \
-        n, y + n, z + n, x - n, y + n, z - n,  # left
-        x + n, y - n, z + n, x + n, y - n, z - n, x + \
-        n, y + n, z - n, x + n, y + n, z + n,  # right
-        x - n, y - n, z + n, x + n, y - n, z + n, x + \
-        n, y + n, z + n, x - n, y + n, z + n,  # front
-        x + n, y - n, z - n, x - n, y - n, z - n, x - \
-        n, y + n, z - n, x + n, y + n, z - n,  # back
+        x+1, y+1, z,      x,   y+1, z,
+        x,   y+1, z+1,    x+1, y+1, z+1,  # top (y+1)
+
+        x,   y,   z,      x+1, y,   z,
+        x+1, y,   z+1,    x,   y,   z+1,  # bottom (y)
+
+        x+1, y,   z+1,    x+1, y,   z,
+        x+1, y+1, z,      x+1, y+1, z+1,  # left (x+1)
+
+        x,   y,   z,      x,   y,   z+1,
+        x,   y+1, z+1,    x,   y+1, z,  # right (x)
+
+        x,   y,   z+1,    x+1, y,   z+1,
+        x+1, y+1, z+1,    x,   y+1, z+1,  # front (z+1)
+
+        x+1, y,   z,      x,   y,   z,
+        x,   y+1, z,      x+1, y+1, z,  # back (z)
+
     ]
 
 
-def cube_shade(x, y, z, n):
+def cube_shade(x, y, z):
     """Return the color diference between the sides of the cube."""
     return [
         1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  # top
@@ -45,12 +54,15 @@ def normalize(position):
     block_position : tuple of ints of len 3
     """
     x, y, z = position
-    x, y, z = (int(round(x)), int(round(y)), int(round(z)))
+    x, y, z = int(x), int(y), int(z)
     return x, y, z
 
 
 def sectorize(position):
     """Returns a tuple representing the sector for the given `position`.
+
+    Sector 0, 0, 0 includes blocks from 0, 0, 0 up to 15, 15, 15 assuming
+    SECTOR_SIZE = 16
 
     Parameters
     ----------

@@ -231,6 +231,7 @@ class Player(WorldObject):
         pad = 0.25
         p = list(position)
         np = normalize(position)
+
         for face in FACES:  # check all surrounding blocks
             for i in range(3):  # check each dimension independently
                 if not face[i]:

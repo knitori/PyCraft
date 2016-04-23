@@ -232,8 +232,8 @@ class World:
             generate.
         """
         x, y, z = position
-        vertex_data = cube_vertices(x, y, z, 0.5)
-        shade_data = cube_shade(1, 1, 1, 1)
+        vertex_data = cube_vertices(x, y, z)
+        shade_data = cube_shade(1, 1, 1)
         texture_data = block.texture
         self._shown[position] = self.batch.add(
             24, GL_QUADS, self.group,
@@ -282,13 +282,16 @@ class World:
         for column in reverse_sectorize(sector):
             x,z = column
             y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
-            for y_lvl in range(0 - 2, y_max):
-                self.add_block((x, y_lvl, z), sand, immediate=False)
-            else:
-                self.add_block((x, y_lvl, z), grass, immediate=False)
+            if x % 10 == 0 or z % 10 == 0:
+                self.add_block((x, -2, z), brick, immediate=False)
+            # for y_lvl in range(0 - 2, y_max):
+            #     self.add_block((x, y_lvl, z), sand, immediate=False)
+            # else:
+            #     self.add_block((x, y_max, z), grass, immediate=False)
+
             # add the safety stone floor.
             # don't want anyone falling into the ether.
-            self.add_block((x, 0 - 3, z), stone, immediate=False)
+            self.add_block((x, -3, z), stone, immediate=False)
             
 
     def hide_sector(self, sector):
